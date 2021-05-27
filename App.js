@@ -1,9 +1,28 @@
-
-import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Platform, Text } from 'react-native';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { StyleSheet, View, Platform, Text, TouchableOpacity, Linking, Button } from 'react-native';
 import { WebView } from 'react-native-webview';
+import ImagePicker from 'react-native-image-crop-picker';
 
 export default function App() {
+  const [appIsReady, setAppIsReady] = useState(false);
+  const cdnlink = 'https://cdn.podbbang.com/data1/jhunsong59/sbook004.mp3';
+
+  const [align, setAlign] = useState('center');
+  const [alignsecond, setAlignsecond] = useState(false);
+
+  setTimeout(() => {
+    setAlign('flex-start'), setAlignsecond(true);
+  }, 3000);
+  const LinkToCdn = () => {
+    Linking.canOpenURL(cdnlink)
+    .then(supported => {
+      if(supported){
+        Linking.openURL(cdnlink);
+      } else {
+        console.log(`${cdnlink} is not correct!`);
+      }
+    })
+  }
   return (
     <View>
       <View style={Style.Header}>
@@ -20,6 +39,11 @@ export default function App() {
             source={{ uri: "https://www.youtube.com/embed/TcMBFSGVi1c?playsinline=1&fs=1" }}
           />
         </View>
+        <TouchableOpacity onPress={() => LinkToCdn()}>
+          <View style={Component.cdn}>
+            <Text>CDN LINK</Text>I 
+          </View>
+        </TouchableOpacity>
       </View>
       <View style={Style.Footer}>
 
@@ -47,10 +71,21 @@ const Style = StyleSheet.create({
     backgroundColor: 'orange',
     width: '100%',
     height: 700,
+    alignItems: 'center',
   },
   Footer: {
     backgroundColor: 'yellow',
     width: '100%',
     height: 100,
   }
+});
+
+const Component = StyleSheet.create({
+  cdn: {
+    width: 120,
+    height: 40,
+    backgroundColor: 'pink',
+  }
 })
+
+
